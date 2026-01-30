@@ -35,7 +35,7 @@ function App() {
   const [galleryIndex, setGalleryIndex] = useState(0);
 
   // ✅ STATIC AUDIO
-  const audioUrl = '/ai-vioceover.mpeg';
+  const audioUrl = 'public/ai-vioceover.mpeg';
 
   const [managerData] = useState<ManagerData>({
   name: 'B. Shankar Govindaraj',
@@ -77,15 +77,23 @@ function App() {
 });
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const animationFrameRef = useRef<number>();
+const animationFrameRef = useRef<number>();
 
-  // ▶️ AUTO PLAY
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play();
+useEffect(() => {
+  const unlockAudio = async () => {
+    try {
+      await audioRef.current?.play();
       setIsPlaying(true);
-    }
-  }, []);
+    } catch {}
+    window.removeEventListener("pointerdown", unlockAudio);
+  };
+
+  window.addEventListener("pointerdown", unlockAudio);
+  return () => window.removeEventListener("pointerdown", unlockAudio);
+}, []);
+
+
+
 
   // 🎵 AUDIO ANALYSIS
   useEffect(() => {
