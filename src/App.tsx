@@ -35,7 +35,7 @@ function App() {
   const [galleryIndex, setGalleryIndex] = useState(0);
 
   // ✅ STATIC AUDIO
-  const audioUrl = 'public/ai-vioceover.mpeg';
+  const audioUrl = '/ai-vioceover.mpeg';
 
   const [managerData] = useState<ManagerData>({
   name: 'B. Shankar Govindaraj',
@@ -79,20 +79,25 @@ function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 const animationFrameRef = useRef<number>();
 
+
+
 useEffect(() => {
   const unlockAudio = async () => {
     try {
       await audioRef.current?.play();
-      setIsPlaying(true);
-    } catch {}
+    } catch (e) {
+      console.log("Autoplay blocked");
+    }
+
     window.removeEventListener("pointerdown", unlockAudio);
   };
 
   window.addEventListener("pointerdown", unlockAudio);
-  return () => window.removeEventListener("pointerdown", unlockAudio);
+
+  return () => {
+    window.removeEventListener("pointerdown", unlockAudio);
+  };
 }, []);
-
-
 
 
   // 🎵 AUDIO ANALYSIS
@@ -183,7 +188,8 @@ useEffect(() => {
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
       </div>
 
-      <audio ref={audioRef} src={audioUrl} />
+      <audio ref={audioRef} src={audioUrl} preload="auto" />
+
 
       
       <div className="relative z-10 max-w-7xl mx-auto px-8 py-12">
