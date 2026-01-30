@@ -79,14 +79,15 @@ function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 const animationFrameRef = useRef<number>();
 
-
-
 useEffect(() => {
   const unlockAudio = async () => {
+    if (!audioRef.current) return;
+
     try {
-      await audioRef.current?.play();
-    } catch (e) {
-      console.log("Autoplay blocked");
+      await audioRef.current.play();
+      console.log("Audio started");
+    } catch (err) {
+      console.log("Autoplay blocked", err);
     }
 
     window.removeEventListener("pointerdown", unlockAudio);
@@ -187,11 +188,15 @@ useEffect(() => {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
       </div>
-
-      <audio ref={audioRef} src={audioUrl} preload="auto" />
-
-
       
+<audio
+  ref={audioRef}
+  src={audioUrl}
+  preload="auto"
+  playsInline
+/>
+
+
       <div className="relative z-10 max-w-7xl mx-auto px-8 py-12">
         <div className="text-center space-y-10">
           {/* Video Always Visible and Looping */}
